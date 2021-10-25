@@ -14,19 +14,20 @@ resource "aws_vpc" "vpc_desafio" {
 
 variable "range_ip" {
   type    = list(string)
-  default = ["0", "8", "16"]
+  default = ["10.10.0.0/24", "10.10.0.8/24", "10.10.0.16/24"]
 }
 
-resource "aws_subnet" "sb_desafio" {
 
-  for_each          = toset([var.range_ip])
+resource "aws_subnet" "sb_desafio_1a" {
+  for_each          = var.range_ip
+  
   vpc_id            = aws_vpc.vpc_desafio.id
-  cidr_block        = "10.10.0.${each.value}/24"
+  cidr_block        = slice(each.value, 0, 2)
   availability_zone = "us-east-1a"
-  #map_public_ip_on_launch = true
+  
 
   tags = {
-    Name = "sb-desafio-gama-um"
+    Name = "sb-desafio-gama-um-${each.index}"
   }
 }
 
@@ -66,12 +67,11 @@ resource "aws_route_table" "rt_desafio" {
 
 variable "subnet_ids_vpc"{
     type = list(string)
-    default = [aws_vpc.vpc_desafio.subnet_ids]
+    default = ["${aws_vpc.vpc_desafio.subnet_ids}"]
 }
 
 resource "aws_route_table_association" "a" {
 
-  count          = "${length(var.subnet_ids_vpc)}"
   subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
   route_table_id = aws_route_table.rt_desafio.id
 }
