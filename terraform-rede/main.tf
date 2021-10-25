@@ -76,7 +76,7 @@ resource "aws_internet_gateway" "igw_desafio" {
 
 resource "aws_eip" "nat_eip" {
   vpc        = true
-  depends_on = [aws_internet_gateway.ig]
+  depends_on = [aws_internet_gateway.igw_desafio]
 }
 
 
@@ -85,11 +85,10 @@ resource "aws_nat_gateway" "ntg_desafio" {
   subnet_id     = aws_subnet.sb_desafio_1c.id
   depends_on    = [aws_internet_gateway.igw_desafio]
  
-  tags = {
-    Name        =  "ntg-desafio-gama-um"
-  }
+tags = {
+Name = "ntg-desafio-gama-um"
 }
-
+}
 
 resource "aws_route_table" "publico" {
   vpc_id = "${aws_vpc.vpc_desafio.id}"
@@ -109,15 +108,14 @@ resource "aws_route_table" "publico" {
 
 
 resource "aws_route_table" "privado" {
-   vpc_id = "${aws_vpc.vpc_desafio.id}"
+  vpc_id = "${aws_vpc.vpc_desafio.id}"
 
   route = [
     {
-        cidr_block                 = "0.0.0.0/0"
-        nat_gateway_id             = "${aws_nat_gateway.ntg_desafio.id}"
+      cidr_block                 = "0.0.0.0/0"
+      nat_gateway_id             = "${aws_nat_gateway.ntg_desafio.id}"
     }
   ]
-
 
   tags = {
     Name = "rt-pv-desafio-gama-um"
@@ -126,23 +124,20 @@ resource "aws_route_table" "privado" {
 
 
 resource "aws_route_table_association" "a1" {
- 
-  subnet_id      = "${aws_subnet.sb_desafio_a.id}"
-  route_table_id = "${aws_route_table.publico.id}"
+ subnet_id      = "${aws_subnet.sb_desafio_a.id}"
+route_table_id = "${aws_route_table.publico.id}"
 }
 
 
 resource "aws_route_table_association" "b1" {
- 
-  subnet_id      = "${aws_subnet.sb_desafio_1b.id}"
-  route_table_id = "${aws_route_table.publico.id}"
+subnet_id      = "${aws_subnet.sb_desafio_1b.id}"
+route_table_id = "${aws_route_table.publico.id}"
 }
 
 
 resource "aws_route_table_association" "c1" {
-
-  subnet_id      = "${aws_subnet.sb_desafio_1c.id}"
-  route_table_id = "${aws_route_table.privado.id}"
+subnet_id      = "${aws_subnet.sb_desafio_1c.id}"
+route_table_id = "${aws_route_table.privado.id}"
 }
 
 
