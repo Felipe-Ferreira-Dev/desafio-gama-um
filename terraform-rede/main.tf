@@ -69,13 +69,9 @@ variable "subnet_ids_vpc"{
     default = [aws_vpc.vpc_desafio.subnet_ids]
 }
 
-
 resource "aws_route_table_association" "a" {
 
-  for_each       = toset([var.subnet_ids_vpc])
-  subnet_id      = "${each.value}"
+  count          = "${length(var.subnet_ids_vpc)}"
+  subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
   route_table_id = aws_route_table.rt_desafio.id
 }
-
-
-
