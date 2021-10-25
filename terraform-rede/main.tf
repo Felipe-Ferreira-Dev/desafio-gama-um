@@ -151,14 +151,14 @@ resource "aws_route_table" "rt_pv_desafio" {
 
 resource "aws_route_table_association" "a1" {
  
-  subnet_id      = aws_subnet.sb_desafio_1a.id
+  subnet_id      = "${aws_subnet.sb_desafio_a.id}"
   route_table_id = aws_route_table.rt_pb_desafio.id
 }
 
 
 resource "aws_route_table_association" "b1" {
  
-  subnet_id      = aws_subnet.sb_desafio_1b.id
+  subnet_id      = "${aws_subnet.sb_desafio_1b.id}"
   route_table_id = aws_route_table.rt_pb_desafio.id
 }
 
@@ -166,9 +166,7 @@ resource "aws_route_table_association" "b1" {
 
 resource "aws_route_table_association" "c1" {
 
-
-  subnet_id      = aws_subnet.sb_desafio_1c.id
+  subnet_id      = "${aws_subnet.sb_desafio_1c.id}"
   route_table_id = aws_route_table.rt_pv_desafio.id
 }
-
 
