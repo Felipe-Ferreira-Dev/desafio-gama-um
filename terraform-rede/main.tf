@@ -64,9 +64,16 @@ resource "aws_route_table" "rt_desafio" {
   }
 }
 
+variable "subnet_ids_vpc"{
+    type = list(string)
+    default = [aws_vpc.vpc_desafio.subnet_ids]
+}
+
+
 resource "aws_route_table_association" "a" {
 
-  subnet_id      = [aws_vpc.vpc_desafio.subnet_ids]
+  for_each       = toset([var.subnet_ids_vpc])
+  subnet_id      = "${each.value}"
   route_table_id = aws_route_table.rt_desafio.id
 }
 
