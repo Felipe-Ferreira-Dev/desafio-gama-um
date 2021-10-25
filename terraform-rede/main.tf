@@ -6,30 +6,53 @@ provider "aws" {
 resource "aws_vpc" "vpc_desafio" {
   cidr_block       = "10.10.0.0/22"
   instance_tenancy = "default"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
     Name = "vpc-desafio-gama-um"
   }
 }
 
-variable "range_ip" {
-  type    = list(string)
-  default = ["10.10.0.0/24", "10.10.0.8/24", "10.10.0.16/24"]
-}
 
-
+#=====================SUBNETS publicas
 resource "aws_subnet" "sb_desafio_1a" {
-  for_each          = var.range_ip
-  
   vpc_id            = aws_vpc.vpc_desafio.id
-  cidr_block        = slice(each.value, 0, 2)
+  cidr_block        = "10.10.0.8/24"
   availability_zone = "us-east-1a"
-  
+  map_public_ip_on_launch = true
 
   tags = {
-    Name = "sb-desafio-gama-um-${each.index}"
+    Name = "sb1a-pb-desafio-gama-um"
+  }
+
+}
+
+resource "aws_subnet" "sb_desafio_1b" {
+  vpc_id            = aws_vpc.vpc_desafio.id
+  cidr_block        = "10.10.0.16/24"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "sb1b-pb-desafio-gama-um"
   }
 }
+#=====================SUBNETS publicas
+
+#=====================SUBNET privada
+resource "aws_subnet" "sb_desafio_1c" {
+  vpc_id            = aws_vpc.vpc_desafio.id
+  cidr_block        = "10.10.0.16/24"
+  availability_zone = "us-east-1c"
+  map_public_ip_on_launch = false
+  
+  tags = {
+    Name = "sb1c-pv-desafio-gama-um"
+  }
+
+}
+#=====================SUBNET privada
 
 resource "aws_internet_gateway" "igw_desafio" {
   vpc_id = aws_vpc.vpc_desafio.id
@@ -39,7 +62,22 @@ resource "aws_internet_gateway" "igw_desafio" {
   }
 }
 
-resource "aws_route_table" "rt_desafio" {
+resource "aws_eip" "nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.ig]
+}
+
+resource "aws_nat_gateway" "ntg_desafio" {
+  allocation_id = "${aws_eip.nat_eip.id}"
+  subnet_id     = aws_subnet.sb_desafio_1c.id
+  depends_on    = [aws_internet_gateway.igw_desafio]
+ 
+  tags = {
+    Name        =  "ntg-desafio-gama-um"
+  }
+}
+
+resource "aws_route_table" "rt_pb__desafio" {
   vpc_id = aws_vpc.vpc_desafio.id
 
   route = [
@@ -61,17 +99,45 @@ resource "aws_route_table" "rt_desafio" {
   ]
 
   tags = {
-    Name = "rt-desafio-gama-um"
+    Name = "rt-pb-desafio-gama-um"
   }
 }
 
-variable "subnet_ids_vpc"{
-    type = list(string)
-    default = ["${aws_vpc.vpc_desafio.subnet_ids}"]
+resource "aws_route_table" "rt_pv__desafio" {
+  vpc_id = aws_vpc.vpc_desafio.id
+
+  route = [
+    {
+      carrier_gateway_id         = ""
+      cidr_block                 = "0.0.0.0/0"
+      destination_prefix_list_id = ""
+      egress_only_gateway_id     = ""
+      gateway_id                 = ""
+      instance_id                = ""
+      ipv6_cidr_block            = ""
+      local_gateway_id           = ""
+      nat_gateway_id             =  
+      network_interface_id       = ""
+      transit_gateway_id         = ""
+      vpc_endpoint_id            = ""
+      vpc_peering_connection_id  = ""
+    }
+  ]
+
+  tags = {
+    Name = "rt-pv-desafio-gama-um"
+  }
 }
 
-resource "aws_route_table_association" "a" {
-
-  subnet_id      = "${element(aws_subnet.public.*.id, count.index)}"
+resource "aws_route_table_association" "1a" {
+ 
+  subnet_id      = aws_subnet.sb_desafio_1a.id
   route_table_id = aws_route_table.rt_desafio.id
 }
+
+resource "aws_route_table_association" "1b" {
+ 
+  subnet_id      = aws_subnet.sb_desafio_1b.id
+  route_table_id = aws_route_table.rt_desafio.id
+}
+
