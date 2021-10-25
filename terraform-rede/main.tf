@@ -91,12 +91,12 @@ Name = "ntg-desafio-gama-um"
 }
 
 resource "aws_route_table" "publico" {
-  vpc_id = "${aws_vpc.vpc_desafio.id}"
+  vpc_id = "aws_vpc.vpc_desafio.id
 
   route = [
     {
       cidr_block                 = "0.0.0.0/0"
-      gateway_id                 = "${aws_internet_gateway.igw_desafio.id}"
+      gateway_id                 = "aws_internet_gateway.igw_desafio.id
     }
   ]
 
@@ -108,12 +108,12 @@ resource "aws_route_table" "publico" {
 
 
 resource "aws_route_table" "privado" {
-  vpc_id = "${aws_vpc.vpc_desafio.id}"
+  vpc_id = "aws_vpc.vpc_desafio.id
 
   route = [
     {
       cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = "${aws_nat_gateway.ntg_desafio.id}"
+      nat_gateway_id             = aws_nat_gateway.ntg_desafio.id
     }
   ]
 
