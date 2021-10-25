@@ -17,9 +17,8 @@ resource "aws_subnet" "sb_desafio_1a" {
   vpc_id            = aws_vpc.vpc_desafio.id
   cidr_block        = "10.10.0.8/24"
   availability_zone = "us-east-1a"
-  map_public_ip_on_launch = true
-
-
+  map_public_ip_on_launch = true 
+  
   tags = {
     Name = "sb1a-pb-desafio-gama-um"
   }
@@ -59,14 +58,14 @@ resource "aws_internet_gateway" "igw_desafio" {
 }
 
 resource "aws_eip" "nat_eip" {
-  vpc        = true
+  vpc = true
   depends_on = [aws_internet_gateway.igw_desafio]
 }
 
 resource "aws_nat_gateway" "ntg_desafio" {
-  allocation_id = "${aws_eip.nat_eip.id}"
-  subnet_id     = aws_subnet.sb_desafio_1c.id
-  depends_on    = [aws_internet_gateway.igw_desafio]
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id  = aws_subnet.sb_desafio_1c.id
+  depends_on  = [aws_internet_gateway.igw_desafio]
   tags = {
     Name = "ntg-desafio-gama-um"
   }
@@ -77,11 +76,11 @@ resource "aws_route_table" "publico" {
 
   route = [
     {
-      cidr_block                 = "0.0.0.0/0"
-      gateway_id                 = aws_internet_gateway.igw_desafio.id
+      cidr_block = "0.0.0.0/0"
+      gateway_id = aws_internet_gateway.igw_desafio.id
     }
   ]
-tags = {
+  tags = {
     Name = "rt-pb-desafio-gama-um"
   }
 }
@@ -92,8 +91,8 @@ resource "aws_route_table" "privado" {
 
   route = [
     {
-      cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = aws_nat_gateway.ntg_desafio.id
+      cidr_block = "0.0.0.0/0"
+      nat_gateway_id  = aws_nat_gateway.ntg_desafio.id
     }
   ]
 
