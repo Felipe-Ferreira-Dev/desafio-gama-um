@@ -1,5 +1,5 @@
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
 }
 
 
@@ -19,12 +19,12 @@ variable "range_ip" {
 
 resource "aws_subnet" "sb_desafio" {
 
-  foreach = var.range_ip
-  vpc_id     = aws_vpc.vpc_desafio.id
-  cidr_block = "10.10.0.${each.value.range_ip}/24"
+  foreach           = var.range_ip
+  vpc_id            = aws_vpc.vpc_desafio.id
+  cidr_block        = "10.10.0.${each.value.range_ip}/24"
   availability_zone = ["us-east-1a"]
   #map_public_ip_on_launch = true
-  
+
   tags = {
     Name = "sb-desafio-gama-um"
   }
@@ -42,21 +42,21 @@ resource "aws_route_table" "rt_desafio" {
   vpc_id = aws_vpc.vpc_desafio.id
 
   route = [
-      {
-        carrier_gateway_id         = ""
-        cidr_block                 = "0.0.0.0/0"
-        destination_prefix_list_id = ""
-        egress_only_gateway_id     = ""
-        gateway_id                 = aws_internet_gateway.igw_desafio.id
-        instance_id                = ""
-        ipv6_cidr_block            = ""
-        local_gateway_id           = ""
-        nat_gateway_id             = ""
-        network_interface_id       = ""
-        transit_gateway_id         = ""
-        vpc_endpoint_id            = ""
-        vpc_peering_connection_id  = ""
-      }
+    {
+      carrier_gateway_id         = ""
+      cidr_block                 = "0.0.0.0/0"
+      destination_prefix_list_id = ""
+      egress_only_gateway_id     = ""
+      gateway_id                 = aws_internet_gateway.igw_desafio.id
+      instance_id                = ""
+      ipv6_cidr_block            = ""
+      local_gateway_id           = ""
+      nat_gateway_id             = ""
+      network_interface_id       = ""
+      transit_gateway_id         = ""
+      vpc_endpoint_id            = ""
+      vpc_peering_connection_id  = ""
+    }
   ]
 
   tags = {
