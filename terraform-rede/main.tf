@@ -19,10 +19,10 @@ variable "range_ip" {
 
 resource "aws_subnet" "sb_desafio" {
 
-  foreach           = var.range_ip
+  for_each          = toset([var.range_ip])
   vpc_id            = aws_vpc.vpc_desafio.id
-  cidr_block        = "10.10.0.${each.value.range_ip}/24"
-  availability_zone = ["us-east-1a"]
+  cidr_block        = "10.10.0.${each.value}/24"
+  availability_zone = "us-east-1a"
   #map_public_ip_on_launch = true
 
   tags = {
@@ -66,7 +66,7 @@ resource "aws_route_table" "rt_desafio" {
 
 resource "aws_route_table_association" "a" {
 
-  subnet_id      = [aws_subnet.vpc_desafio.subnet_ids]
+  subnet_id      = [aws_vpc.vpc_desafio.subnet_ids]
   route_table_id = aws_route_table.rt_desafio.id
 }
 
