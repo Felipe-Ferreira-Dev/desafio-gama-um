@@ -14,7 +14,7 @@ resource "aws_vpc" "vpc_desafio" {
 #=====================SUBNETS publicas
 resource "aws_subnet" "sb_desafio_1a" {
   vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.4/27"
+  cidr_block              = "10.1.0.0/27"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
   tags                    = { Name = "sb1a-pb-desafio-gama-um" }
@@ -22,7 +22,7 @@ resource "aws_subnet" "sb_desafio_1a" {
 
 resource "aws_subnet" "sb_desafio_1b" {
   vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.8/27"
+  cidr_block              = "10.1.0.32/27"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 
@@ -36,7 +36,7 @@ resource "aws_subnet" "sb_desafio_1b" {
 #=====================SUBNET privada
 resource "aws_subnet" "sb_desafio_1c" {
   vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.12/27"
+  cidr_block              = "10.1.0.64/27"
   availability_zone       = "us-east-1c"
   map_public_ip_on_launch = false
 
