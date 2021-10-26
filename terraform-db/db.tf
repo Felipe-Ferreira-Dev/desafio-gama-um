@@ -12,7 +12,7 @@ resource "aws_instance" "ec2_db_dev" {
     encrypted   = true
     volume_size = 20
   }
-   
+
   tags = {
     Name = "ec2-db-dev"
   }
@@ -29,7 +29,7 @@ resource "aws_instance" "ec2_db_stage" {
     encrypted   = true
     volume_size = 20
   }
-   
+
   tags = {
     Name = "ec2-db-stage"
   }
@@ -46,7 +46,7 @@ resource "aws_instance" "ec2_db_prod" {
     encrypted   = true
     volume_size = 20
   }
-   
+
   tags = {
     Name = "ec2-db-prod"
   }
@@ -60,7 +60,7 @@ resource "aws_security_group" "sg_db" {
 
   ingress = [
     {
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks      = ["0.0.0.0/0"]
       description      = "SSH from VPC"
       from_port        = 22
       ipv6_cidr_blocks = []
