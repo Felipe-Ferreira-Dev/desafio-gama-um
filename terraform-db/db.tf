@@ -78,7 +78,7 @@ resource "aws_security_group" "sg_db" {
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
       protocol         = "tcp"
-      security_groups  = ["sg-010d4de15095a15a6"]
+      security_groups  = ["sg-07e7a1f88c1caf255"]
       self             = false
     }
   ]
@@ -109,7 +109,7 @@ output "output_ec2_dev" {
     "id: ${aws_instance.ec2_db_dev.id}",
     "private: ${aws_instance.ec2_db_dev.private_ip}",
     "public_ip: ${aws_instance.ec2_db_dev.public_ip}",
-    "public_dns: ${aws_instance.ec2_db_dev.public_dns}",
+    "public_dns_dev: ${aws_instance.ec2_db_dev.public_dns}",
     "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_dev.public_dns}"
   ]
 }
@@ -121,7 +121,7 @@ output "output_ec2_stage" {
     "id: ${aws_instance.ec2_db_stage.id}",
     "private: ${aws_instance.ec2_db_stage.private_ip}",
     "public_ip: ${aws_instance.ec2_db_stage.public_ip}",
-    "public_dns: ${aws_instance.ec2_db_stage.public_dns}",
+    "public_dns_stage: ${aws_instance.ec2_db_stage.public_dns}",
     "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_stage.public_dns}"
   ]
 }
@@ -134,7 +134,7 @@ output "output_ec2_prod" {
     "id: ${aws_instance.ec2_db_prod.id}",
     "private: ${aws_instance.ec2_db_prod.private_ip}",
     "public_ip: ${aws_instance.ec2_db_prod.public_ip}",
-    "public_dns: ${aws_instance.ec2_db_prod.public_dns}",
+    "public_dns_prod: ${aws_instance.ec2_db_prod.public_dns}",
     "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_prod.public_dns}"
   ]
 }
