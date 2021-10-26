@@ -1,1 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Clone") {
+            steps {
+                //Clone repo do git com o codigo para provisionar e configurar as maquinas
+                git url: 'https://github.com/Felipe-Ferreira-Dev/desafio-gama-um.git', branch: 'main'
+            }
+        }
+        stage("Deploy EC2 ") {
+            steps {
+                //  shell script para criar EC2 com Terraform e config Java e Nginx com Ansible
+                sh "/var/lib/jenkins/workspace/PipelineDB/deploy.sh"
+            }
+        }
+        // stage("Test ") {
+        //     steps {
+        //         //  shell script de test do Nginx
+        //         // sh "/var/lib/jenkins/workspace/PipelineDB/test.sh"
+        //     }
+        // }
+        
+    }
+}
 
