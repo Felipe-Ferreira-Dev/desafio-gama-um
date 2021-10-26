@@ -71,7 +71,7 @@ resource "aws_security_group" "sg_db" {
       to_port          = 22
     },
     {
-      cidr_blocks      = ""
+      cidr_blocks      = ["0.0.0.0/0"]
       description      = "Mysql"
       from_port        = 3306
       to_port          = 3306
