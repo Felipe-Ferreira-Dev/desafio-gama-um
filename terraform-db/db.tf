@@ -124,15 +124,19 @@ resource "aws_network_interface" "in_db" {
   
 }
 
+resource "aws_eip_association" "eip_assoc" {
+  allocation_id = "eipalloc-0b336693c7ffb68d8"
+}
+
 # terraform refresh para mostrar o ssh
 output "output_ec2_dev" {
   value = [
     "ec2-db-dev",
     "id: ${aws_instance.ec2_db_dev.id}",
-    "private: ${aws_instance.ec2_db_dev.private_ip}",
-    "public_ip: ${aws_instance.ec2_db_dev.public_ip}",
+    "private_ip_dev: ${aws_instance.ec2_db_dev.private_ip}",
+    "public_ip_dev: ${aws_instance.ec2_db_dev.public_ip}",
     "public_dns_dev: ${aws_instance.ec2_db_dev.public_dns}",
-    "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_dev.public_dns}"
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_dev.public_dns}"
   ]
 }
 
@@ -141,10 +145,10 @@ output "output_ec2_stage" {
   value = [
     "ec2-db-stage",
     "id: ${aws_instance.ec2_db_stage.id}",
-    "private: ${aws_instance.ec2_db_stage.private_ip}",
-    "public_ip: ${aws_instance.ec2_db_stage.public_ip}",
+    "private_ip_stage: ${aws_instance.ec2_db_stage.private_ip}",
+    "public_ip_stage: ${aws_instance.ec2_db_stage.public_ip}",
     "public_dns_stage: ${aws_instance.ec2_db_stage.public_dns}",
-    "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_stage.public_dns}"
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_stage.public_dns}"
   ]
 }
 
@@ -154,10 +158,10 @@ output "output_ec2_prod" {
   value = [
     "ec2-db-prod",
     "id: ${aws_instance.ec2_db_prod.id}",
-    "private: ${aws_instance.ec2_db_prod.private_ip}",
-    "public_ip: ${aws_instance.ec2_db_prod.public_ip}",
+    "private_ip_prod: ${aws_instance.ec2_db_prod.private_ip}",
+    "public_ip_prod: ${aws_instance.ec2_db_prod.public_ip}",
     "public_dns_prod: ${aws_instance.ec2_db_prod.public_dns}",
-    "ssh -i ssh -i ~/.ssh/id_rsa_itau ubuntu@${aws_instance.ec2_db_prod.public_dns}"
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_prod.public_dns}"
   ]
 }
 
