@@ -11,7 +11,7 @@ pipeline {
         stage("Deploy EC2 ") {
             steps {
                 //  shell script para criar EC2 com Terraform e config Java e Nginx com Ansible
-                sh "/var/lib/jenkins/workspace/PipelineDB/deploy.sh"
+                sh "/var/lib/jenkins/workspace/PipelineDB/deploy-db.sh"
             }
         }
         // stage("Test ") {
