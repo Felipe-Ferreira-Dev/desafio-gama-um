@@ -71,14 +71,14 @@ resource "aws_security_group" "sg_db" {
       to_port          = 22
     },
     {
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks      = ""
       description      = "Mysql"
       from_port        = 3306
-      to_port          = 80
+      to_port          = 3306
       ipv6_cidr_blocks = []
       prefix_list_ids  = []
       protocol         = "tcp"
-      security_groups  = []
+      security_groups  = ["sg-010d4de15095a15a6"]
       self             = false
     }
   ]
