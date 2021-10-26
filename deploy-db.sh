@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd workspace/PipelineDB/terraform-db
+cd terraform-db
 /usr/bin/terraform init
 /usr/bin/terraform refresh
 /usr/bin/terraform apply -auto-approve
