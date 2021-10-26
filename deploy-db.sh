@@ -22,8 +22,3 @@ echo "$(terraform output | grep public_dns_stage | awk '{print $2;exit}')" | sed
 echo $"[ec2-db-prod]" >> ../ansible-mysql/hosts # edita arquivo
 echo "$(terraform output | grep public_dns_prod | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../ansible-mysql/hosts 
 
-echo "Aguardando criação de maquinas ..."
-sleep 20 # 15 segundos
-
-cd ../ansible-mysql
-ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key /var/lib/jenkins/.ssh/id_rsa
