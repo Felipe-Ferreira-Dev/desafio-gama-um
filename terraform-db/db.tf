@@ -126,7 +126,7 @@ output "output_ec2_stage" {
   ]
 }
 
-ec2_db_prod
+
 # terraform refresh para mostrar o ssh
 output "output_ec2_prod" {
   value = [
