@@ -104,10 +104,7 @@ resource "aws_security_group" "sg_db" {
 
 resource "aws_network_interface" "in_db" {
   subnet_id       = "subnet-02dd0ed058fa41755"
-  private_ips     = [
-    aws_instance.ec2_db_dev.private_ip, aws_instance.ec2_db_stage.private_ip, 
-    aws_instance.ec2_db_prod.private_ip
-  ]
+ 
   security_groups = [aws_security_group.sg_db.id]
 
   attachment {
