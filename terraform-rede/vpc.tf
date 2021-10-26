@@ -1,138 +1,143 @@
 provider "aws" {
   region = "us-east-1"
 }
-resource "aws_vpc" "vpc_desafio" {
-  cidr_block           = "10.1.0.0/24"
-  instance_tenancy     = "default"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-  tags = {
-    Name = "vpc-desafio-gama-um"
+
+resource "aws_instance" "ec2_db_dev" {
+  ami                         = "ami-09e67e426f25ce0d7"
+  instance_type               = "t2.micro"
+  key_name                    = "	key-wk-1"
+  subnet_id                   = "subnet-02dd0ed058fa41755"
+  associate_public_ip_address = true
+  root_block_device {
+    encrypted   = true
+    volume_size = 20
   }
-}
-
-#=====================SUBNETS publicas
-resource "aws_subnet" "sb_desafio_1a" {
-  vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.0/27"
-  availability_zone       = "us-east-1a"
-  map_public_ip_on_launch = true
-  tags                    = { Name = "sb1a-pb-desafio-gama-um" }
-}
-
-resource "aws_subnet" "sb_desafio_1b" {
-  vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.32/27"
-  availability_zone       = "us-east-1b"
-  map_public_ip_on_launch = true
 
   tags = {
-    Name = "sb1b-pb-desafio-gama-um"
+    Name = "ec2-db-dev"
   }
+  vpc_security_group_ids = ["${aws_security_group.sg_db.id}"]
 }
-#=====================SUBNETS publicas
 
-
-#=====================SUBNET privada
-resource "aws_subnet" "sb_desafio_1c" {
-  vpc_id                  = aws_vpc.vpc_desafio.id
-  cidr_block              = "10.1.0.64/27"
-  availability_zone       = "us-east-1c"
-  map_public_ip_on_launch = false
+resource "aws_instance" "ec2_db_stage" {
+  ami                         = "ami-09e67e426f25ce0d7"
+  instance_type               = "t2.medium"
+  key_name                    = "	key-wk-1"
+  subnet_id                   = "subnet-02dd0ed058fa41755"
+  associate_public_ip_address = true
+  root_block_device {
+    encrypted   = true
+    volume_size = 20
+  }
 
   tags = {
-    Name = "sb1c-pv-desafio-gama-um"
+    Name = "ec2-db-stage"
   }
+  vpc_security_group_ids = ["${aws_security_group.sg_db.id}"]
 }
-#=====================SUBNET privada
 
-resource "aws_internet_gateway" "igw_desafio" {
-  vpc_id = aws_vpc.vpc_desafio.id
+resource "aws_instance" "ec2_db_prod" {
+  ami                         = "ami-09e67e426f25ce0d7"
+  instance_type               = "t2.large"
+  key_name                    = "	key-wk-1"
+  subnet_id                   = "subnet-02dd0ed058fa41755"
+  associate_public_ip_address = true
+  root_block_device {
+    encrypted   = true
+    volume_size = 20
+  }
+
   tags = {
-    Name = "igw-desafio-gama-um"
+    Name = "ec2-db-prod"
   }
+  vpc_security_group_ids = ["${aws_security_group.sg_db.id}"]
 }
 
-resource "aws_eip" "nat_eip" {
-  vpc        = true
-  depends_on = [aws_internet_gateway.igw_desafio]
-}
+resource "aws_security_group" "sg_db" {
+  name        = "sg_db"
+  description = "sg mysql and ssh inbound traffic"
+  vpc_id      = "vpc-08e4ed3899b973f28"
 
-resource "aws_nat_gateway" "ntg_desafio" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.sb_desafio_1c.id
-  depends_on    = [aws_internet_gateway.igw_desafio]
-  tags = {
-    Name = "ntg-desafio-gama-um"
-  }
-}
-
-resource "aws_route_table" "publico" {
-  vpc_id = aws_vpc.vpc_desafio.id
-
-  route = [
+  ingress = [
     {
-      cidr_block                 = "0.0.0.0/0"
-      gateway_id                 = aws_internet_gateway.igw_desafio.id
-      destination_prefix_list_id = ""
-      egress_only_gateway_id     = ""
-      carrier_gateway_id         = ""
-      instance_id                = ""
-      ipv6_cidr_block            = ""
-      local_gateway_id           = ""
-      network_interface_id       = ""
-      transit_gateway_id         = ""
-      vpc_endpoint_id            = ""
-      vpc_peering_connection_id  = ""
-      nat_gateway_id             = ""
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "SSH from VPC"
+      from_port        = 22
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = []
+      self             = false
+      to_port          = 22
+    },
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "Mysql"
+      from_port        = 3306
+      to_port          = 3306
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "tcp"
+      security_groups  = ["sg-07e7a1f88c1caf255"]
+      self             = false
     }
   ]
-  tags = {
-    Name = "rt-pb-desafio-gama-um"
-  }
-}
 
-
-resource "aws_route_table" "privado" {
-  vpc_id = aws_vpc.vpc_desafio.id
-
-  route = [
+  egress = [
     {
-      cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = aws_nat_gateway.ntg_desafio.id
-      destination_prefix_list_id = ""
-      egress_only_gateway_id     = ""
-      carrier_gateway_id         = ""
-      instance_id                = ""
-      ipv6_cidr_block            = ""
-      local_gateway_id           = ""
-      network_interface_id       = ""
-      transit_gateway_id         = ""
-      vpc_endpoint_id            = ""
-      vpc_peering_connection_id  = ""
-      gateway_id                 = ""
+      from_port        = 0
+      to_port          = 0
+      protocol         = "-1"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"],
+      prefix_list_ids  = null,
+      security_groups : null,
+      self : null,
+      description : "Libera dados da rede interna"
     }
   ]
 
   tags = {
-    Name = "rt-pv-desafio-gama-um"
+    Name = "sg_db"
   }
 }
 
 
-resource "aws_route_table_association" "a1" {
-  subnet_id      = aws_subnet.sb_desafio_1a.id
-  route_table_id = aws_route_table.publico.id
+# terraform refresh para mostrar o ssh
+output "output_ec2_dev" {
+  value = [
+    "ec2-db-dev",
+    "id: ${aws_instance.ec2_db_dev.id}",
+    "private_ip_dev: ${aws_instance.ec2_db_dev.private_ip}",
+    "public_ip_dev: ${aws_instance.ec2_db_dev.public_ip}",
+    "public_dns_dev: ${aws_instance.ec2_db_dev.public_dns}",
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_dev.public_dns}"
+  ]
+}
+
+# terraform refresh para mostrar o ssh
+output "output_ec2_stage" {
+  value = [
+    "ec2-db-stage",
+    "id: ${aws_instance.ec2_db_stage.id}",
+    "private_ip_stage: ${aws_instance.ec2_db_stage.private_ip}",
+    "public_ip_stage: ${aws_instance.ec2_db_stage.public_ip}",
+    "public_dns_stage: ${aws_instance.ec2_db_stage.public_dns}",
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_stage.public_dns}"
+  ]
 }
 
 
-resource "aws_route_table_association" "b1" {
-  subnet_id      = aws_subnet.sb_desafio_1b.id
-  route_table_id = aws_route_table.publico.id
+# terraform refresh para mostrar o ssh
+output "output_ec2_prod" {
+  value = [
+    "ec2-db-prod",
+    "id: ${aws_instance.ec2_db_prod.id}",
+    "private_ip_prod: ${aws_instance.ec2_db_prod.private_ip}",
+    "public_ip_prod: ${aws_instance.ec2_db_prod.public_ip}",
+    "public_dns_prod: ${aws_instance.ec2_db_prod.public_dns}",
+    "ssh -i /var/lib/jenkins/.ssh/id_rsa ubuntu@${aws_instance.ec2_db_prod.public_dns}"
+  ]
 }
 
 
-resource "aws_route_table_association" "c1" {
-  subnet_id      = aws_subnet.sb_desafio_1c.id
-  route_table_id = aws_route_table.privado.id
-}
