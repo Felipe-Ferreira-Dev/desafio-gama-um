@@ -13,14 +13,14 @@ terraform refresh
 echo "Aguardando criação de maquinas ..."
 sleep 20 # 20 segundos
 
-echo $"[ec2-db-dev]" >> ../1-ansible/hosts # edita arquivo
-echo "$(terraform output | grep public_dns_dev | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../1-ansible/hosts 
+echo $"[ec2-db-dev]" >> ../ansible-mysql/hosts # edita arquivo
+echo "$(terraform output | grep public_dns_dev | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../ansible-mysql/hosts 
 
-echo $"[ec2-db-dev]" >> ../1-ansible/hosts # edita arquivo
-echo "$(terraform output | grep public_dns_stage | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../1-ansible/hosts 
+echo $"[ec2-db-dev]" >> ../ansible-mysql/hosts # edita arquivo
+echo "$(terraform output | grep public_dns_stage | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../ansible-mysql/hosts 
 
-echo $"[ec2-db-prod]" >> ../1-ansible/hosts # edita arquivo
-echo "$(terraform output | grep public_dns_prod | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../1-ansible/hosts 
+echo $"[ec2-db-prod]" >> ../ansible-mysql/hosts # edita arquivo
+echo "$(terraform output | grep public_dns_prod | awk '{print $2;exit}')" | sed -e "s/\",//g" >> ../ansible-mysql/hosts 
 
 echo "Aguardando criação de maquinas ..."
 sleep 20 # 15 segundos
