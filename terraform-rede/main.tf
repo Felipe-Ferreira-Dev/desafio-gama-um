@@ -121,7 +121,7 @@ resource "aws_route_table" "privado" {
 
 
 resource "aws_route_table_association" "a1" {
-  subnet_id      = aws_subnet.sb_desafio_a.id
+  subnet_id      = aws_subnet.sb_desafio_a1.id
   route_table_id = aws_route_table.publico.id
 }
 
