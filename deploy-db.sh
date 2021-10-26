@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-cd /var/lib/jenkins/workspace/PipelineDB/terraform-db/
+cd /var/lib/jenkins/workspace/PipelineDB/terraform-db
 /usr/bin/terraform init
 /usr/bin/terraform refresh
 /usr/bin/terraform apply -auto-approve
