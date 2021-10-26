@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "entrando no diretório"
 cd terraform-db
 terraform init
 terraform refresh
