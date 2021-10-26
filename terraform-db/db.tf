@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_instance" "ec2_db_dev" {
   ami                         = "ami-09e67e426f25ce0d7"
   instance_type               = "t2.micro"
-  key_name                    = "id_rsa_jenkins"
+  key_name                    = "	key-wk-1"
   subnet_id                   = "subnet-02dd0ed058fa41755"
   associate_public_ip_address = true
   root_block_device {
@@ -22,7 +22,7 @@ resource "aws_instance" "ec2_db_dev" {
 resource "aws_instance" "ec2_db_stage" {
   ami                         = "ami-09e67e426f25ce0d7"
   instance_type               = "t2.medium"
-  key_name                    = "id_rsa_jenkins"
+  key_name                    = "	key-wk-1"
   subnet_id                   = "subnet-02dd0ed058fa41755"
   associate_public_ip_address = true
   root_block_device {
@@ -39,7 +39,7 @@ resource "aws_instance" "ec2_db_stage" {
 resource "aws_instance" "ec2_db_prod" {
   ami                         = "ami-09e67e426f25ce0d7"
   instance_type               = "t2.large"
-  key_name                    = "id_rsa_jenkins"
+  key_name                    = "	key-wk-1"
   subnet_id                   = "subnet-02dd0ed058fa41755"
   associate_public_ip_address = true
   root_block_device {
@@ -101,8 +101,6 @@ resource "aws_security_group" "sg_db" {
     Name = "sg_db"
   }
 }
-
-
 
 
 # terraform refresh para mostrar o ssh
