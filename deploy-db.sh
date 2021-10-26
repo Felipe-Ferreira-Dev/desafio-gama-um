@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-cd terraform-db
+cd terraform-db/
 terraform init
 terraform refresh
 terraform apply -auto-approve
