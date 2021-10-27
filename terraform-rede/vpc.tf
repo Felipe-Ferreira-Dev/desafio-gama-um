@@ -60,7 +60,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "ntg_desafio" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.sb_desafio_1c.id
+  subnet_id     = aws_subnet.sb_desafio_1a.id
   depends_on    = [aws_internet_gateway.igw_desafio]
   tags = {
     Name = "ntg-desafio-gama-um"
